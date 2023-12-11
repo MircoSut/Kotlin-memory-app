@@ -3,17 +3,11 @@ package com.mcsut.mymemory
 import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mcsut.mymemory.ui.theme.MyMemoryTheme
+import com.mcsut.mymemory.models.BoardSize
+import com.mcsut.mymemory.utils.DEFAULT_ICONS
+
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
 class MainActivity : ComponentActivity() {
@@ -22,6 +16,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var tvNumMoves: TextView
     private lateinit var tvNumPairs: TextView
 
+    private var boardSize: BoardSize = BoardSize.EASY
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +26,12 @@ class MainActivity : ComponentActivity() {
         tvNumMoves = findViewById(R.id.tvNumMoves)
         tvNumPairs = findViewById(R.id.tvNumPairs)
 
-        rvBoard.adapter = MemoryBoardAdapter(this, 8)
+        val chosenImages = DEFAULT_ICONS.shuffled().take(boardSize.getNumPairs())
+        val randomizedImages = (chosenImages + chosenImages).shuffled()
+
+        rvBoard.adapter = MemoryBoardAdapter(this, boardSize, randomizedImages)
         rvBoard.setHasFixedSize(true)
-        rvBoard.layoutManager = GridLayoutManager(this,2)
+        rvBoard.layoutManager = GridLayoutManager(this,boardSize.getWidth())
     }
 }
 
